@@ -40,6 +40,12 @@ INSTALLED_APPS = [
     'dashboard'
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000", 
+    "https://dashboard-new-6wpg.vercel.app/"
+]
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
