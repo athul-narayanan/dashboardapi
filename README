@@ -1,0 +1,47 @@
+# DASHBOARD API
+
+This project provides API interface to fetch dashboards.
+
+## Prerequisites
+Before setting up the project, you have the following installed:
+1. Install Docker Desktop [Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
+2. Install Pgadmin 4  [Download Pgadmin 4](https://www.pgadmin.org/download/)
+
+# Setup
+
+Clone [Repository](https://github.com/athul-narayanan/dashboardapi) locally.
+
+cd dashboardapi
+
+# Install and prepare dependencies
+
+1) Install and prepare dependencies using ```pip install -r requirements.txt```
+
+2) Pull the docker image for postgres using ``` docker pull postgres```
+3) Run the docker container using ```docker run --name dappostgres -e POSTGRES_PASSWORD=Algoma@2024 -p 5434:5432 -d postgres```
+4) Create database in the container ```docker exec -it dappostgres psql -U postgres -c "CREATE DATABASE dashboarddatabase"```
+5) Prepare database migrations for all tables using ```python manage.py makemigrations dashboard```
+6) Apply Migrations to the database using ```python manage.py migrate```
+7) Connect to PgAdmin 4 using database credentials used in step 3
+8) Add Entry for dashboards by running below SQL commands (You can add many dashboards)
+   ```sql
+    INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES
+    (1, 'us-senate-election', 'US Senate Election 1967-2022', '2025-04-04', 'Distribution by State and Year', 'https://public.tableau.com/views/Book3_17425929926010/Sheet1?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+
+    INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES 
+    (2, 'us-senate-election', 'US Senate Election 1967-2022', '2025-04-04', 'Total Votes by state', 'https://public.tableau.com/shared/M5BF4XRNX?:display_count=n&:origin=viz_share_link');
+
+    INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES 
+    (3, 'crime', 'Crime Data', '2025-04-04', 'Crime By Region', 'https://public.tableau.com/views/LearnEmbeddedAnalytics/SalesOverviewDashboard?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+
+    INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES 
+    (4, 'crime', 'Crime Data', '2025-04-04', 'Crime Rate By Year', 'https://public.tableau.com/views/PublicSectorEmployeesCrimeData/CrimeRateByYear?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+
+    INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES 
+    (5, 'crime-1', 'Crime Data 1', '2025-04-05', 'Crime Rate By Year', 'https://public.tableau.com/views/DataAnalysis_17125825841580/CrimeRate?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+9) Run the application using ```python manage.py runserver```
+   
+   The above command runs the application on port 8000. Make sure that you have installed required dependencies and started postgres sql in docker.
+  
+10) shut down the application manually using ```Ctrl-C```
+
