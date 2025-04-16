@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from ecom.ml.productrecommender import ProductRecommender
 import pandas as pd
 import os
+from django.conf import settings
 
 class EcomRecommenderView(generics.GenericAPIView):
     def get(self, request):
@@ -19,8 +20,8 @@ class EcomRecommenderView(generics.GenericAPIView):
             return Response({'error': 'user_id must be an integer.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Load dataset
-        csv_path = os.path.join('ecom\data\data.csv')
-        df = pd.read_csv(csv_path)
+        file_path = os.path.join(settings.BASE_DIR, 'ecom', 'data', 'data.csv')
+        df = pd.read_csv(file_path)
         recommender = ProductRecommender(df)
 
         try:
