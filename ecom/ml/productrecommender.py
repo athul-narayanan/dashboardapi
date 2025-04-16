@@ -27,7 +27,7 @@ class ProductRecommender:
         print(df_country.shape)
         
         # Split train test set
-        train_df, _ = self.split_dataset(df_country)
+        train_df, test_df = self.split_dataset(df_country)
 
         # User-item matrix
         matrix = self.get_customer_item_matrix(train_df)
@@ -41,11 +41,11 @@ class ProductRecommender:
         item_sim = cosine_similarity(tfidf_matrix)
         item_sim_df = pd.DataFrame(item_sim, index=item_user_matrix.index, columns=item_user_matrix.index)
 
-        return matrix, item_sim_df
+        return matrix, item_sim_df, test_df
 
     # Recommend Product
-    def recommend_products(self, country, user_id, top_k=10, top_n_similar=5):
-        matrix, item_sim_df = self.build_model(country)
+    def recommend_products(self, country, user_id, top_k=10, top_n_similar=10):
+        matrix, item_sim_df, test_df = self.build_model(country)
 
         if user_id not in matrix.index:
             return f"User {user_id} not found in {country} training data."
@@ -64,4 +64,43 @@ class ProductRecommender:
                     scores[sim_item] = scores.get(sim_item, 0) + score
 
         recommended = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
-        return [item for item, _ in recommended]
+        recommended_items = [item for item, _ in recommended] 
+
+        return self.evaluate_recommendation(
+            recommended_items=recommended_items,
+            user_id=user_id,
+            country=country,
+            df_test=test_df,
+            top_k=top_k,
+            top_n_similar=top_n_similar
+        )
+
+    
+    # Evaluate Recommendation
+    def evaluate_recommendation(self, recommended_items, user_id, country, df_test, top_k=10, top_n_similar=20):
+        hit_count = 0
+        total_users = 0
+        precision_scores = []
+        
+        actual_items = df_test[df_test['CustomerID'] == user_id]['Description'].unique()
+        
+        hits = len(set(recommended_items) & set(actual_items))
+        if hits > 0:
+            hit_count += 1
+        if len(recommended_items) > 0:
+            precision_scores.append(hits / len(recommended_items))
+
+        total_users += 1
+
+        hit_rate = hit_count / total_users
+        avg_precision = sum(precision_scores) / len(precision_scores)
+
+        return {
+            'recommended_items': recommended_items,
+            'country': country,
+            'top_k': top_k,
+            'top_n_similar': top_n_similar,
+            'hit_rate': hit_rate,
+            'average_precision': avg_precision,
+            'users_evaluated': total_users
+        }
