@@ -3,7 +3,7 @@
 """
 
 from rest_framework import serializers
-from ecom.models import CustomerSummary, EcomCountry
+from ecom.models import CustomerSummary
 
 
 class EcomUserSerializer(serializers.ModelSerializer):

@@ -3,3 +3,6 @@ Django>=4.2
 djangorestframework==3.14.0
 gunicorn
 django-cors-headers>=4.0.0
+TfidfTransformer>=0.1
+cosine_similarity>=0.1.2
+pandas>=2.2.3
