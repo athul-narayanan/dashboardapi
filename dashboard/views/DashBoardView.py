@@ -28,7 +28,8 @@ class DashBoardView(generics.GenericAPIView):
             
             dashboard_data[key]['dashboards'].append({
                 'name': item['name'],
-                'link': item['link']
+                'link': item['link'],
+                "title": key
             })
         final_dashboards = [
                 {
