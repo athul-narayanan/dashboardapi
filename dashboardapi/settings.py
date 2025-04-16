@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-7w=gr%an)r(m9-ds3p=x!ijocko_gm%dwfbbq=m6omc$o7fg&*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dashboard-api-production-ceb7.up.railway.app', '127.0.0.1']
-
+ALLOWED_HOSTS = ['dashboard-api-production-ceb7.up.railway.app', "127.0.0.1"]
 
 # Application definition
 
@@ -62,11 +61,11 @@ MIDDLEWARE = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'neondb', 
-        'USER': 'neondb_owner',
-        'PASSWORD': 'npg_gK2IvNQVyzL0',
-        'HOST': 'ep-withered-bush-a5o66eih-pooler.us-east-2.aws.neon.tech',
-        'PORT': 5432,
+        'NAME': 'dashboarddatabase', 
+        'USER': 'postgres',
+        'PASSWORD': 'Algoma@2024',
+        'HOST': 'localhost',
+        'PORT': 5434,
     }
 }
 
