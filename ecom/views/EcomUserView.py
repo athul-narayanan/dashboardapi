@@ -24,7 +24,7 @@ class EcomUserView(generics.GenericAPIView):
         if country:
             queryset = queryset.filter(country__iexact=country)
 
-        queryset = queryset.order_by('-product_count')
+        queryset = queryset.order_by('-invoice_count')
 
         # Inject page into request manually
         request.query_params._mutable = True
