@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -23,7 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7w=gr%an)r(m9-ds3p=x!ijocko_gm%dwfbbq=m6omc$o7fg&*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+GEMINI_API_KEY = "AIzaSyCuBG2zbRkAnkb7bjOqSYxdzKshWxr_kRo"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+MEDIA_URL = '/uploads/'
 
 ALLOWED_HOSTS = ['dashboard-api-production-ceb7.up.railway.app', "127.0.0.1"]
 
@@ -59,13 +66,13 @@ MIDDLEWARE = [
 ]
 
 DATABASES = {
-    'default': {
+     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dashboarddatabase', 
-        'USER': 'postgres',
-        'PASSWORD': 'Algoma@2024',
-        'HOST': 'localhost',
-        'PORT': 5434,
+        'NAME': 'neondb', 
+        'USER': 'neondb_owner',
+        'PASSWORD': 'npg_gK2IvNQVyzL0',
+        'HOST': 'ep-withered-bush-a5o66eih-pooler.us-east-2.aws.neon.tech',
+        'PORT': 5432,
     }
 }
 

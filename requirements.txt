@@ -6,3 +6,5 @@ django-cors-headers>=4.0.0
 TfidfTransformer>=0.1
 cosine_similarity>=0.1.2
 pandas>=2.2.3
+google-generativeai
+openpyxl
