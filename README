@@ -1,47 +1,121 @@
-# DASHBOARD API
+# Dashboard API
 
-This project provides API interface to fetch dashboards.
+A Django REST API for serving dashboard metadata backed by a PostgreSQL database.
+
+---
 
 ## Prerequisites
-Before setting up the project, you have the following installed:
-1. Install Docker Desktop [Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
-2. Install Pgadmin 4  [Download Pgadmin 4](https://www.pgadmin.org/download/)
 
-# Setup
+Ensure the following are installed before proceeding:
 
-Clone [Repository](https://github.com/athul-narayanan/dashboardapi) locally.
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [pgAdmin 4](https://www.pgadmin.org/download/)
+- Python 3 with `pip`
 
+---
+
+## Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/athul-narayanan/dashboardapi
 cd dashboardapi
+```
 
-# Install and prepare dependencies
+### 2. Install Python dependencies
 
-1) Install and prepare dependencies using ```pip install -r requirements.txt```
+```bash
+pip install -r requirements.txt
+```
 
-2) Pull the docker image for postgres using ``` docker pull postgres```
-3) Run the docker container using ```docker run --name dappostgres -e POSTGRES_PASSWORD=Algoma@2024 -p 5434:5432 -d postgres```
-4) Create database in the container ```docker exec -it dappostgres psql -U postgres -c "CREATE DATABASE dashboarddatabase"```
-5) Prepare database migrations for all tables using ```python manage.py makemigrations dashboard```
-6) Apply Migrations to the database using ```python manage.py migrate```
-7) Connect to PgAdmin 4 using database credentials used in step 3
-8) Add Entry for dashboards by running below SQL commands (You can add many dashboards)
-   ```sql
-    INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES
-    (1, 'us-senate-election', 'US Senate Election 1967-2022', '2025-04-04', 'Distribution by State and Year', 'https://public.tableau.com/views/Book3_17425929926010/Sheet1?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+### 3. Set up PostgreSQL with Docker
 
-    INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES 
-    (2, 'us-senate-election', 'US Senate Election 1967-2022', '2025-04-04', 'Total Votes by state', 'https://public.tableau.com/shared/M5BF4XRNX?:display_count=n&:origin=viz_share_link');
+Pull the PostgreSQL image:
 
-    INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES 
-    (3, 'crime', 'Crime Data', '2025-04-04', 'Crime By Region', 'https://public.tableau.com/views/LearnEmbeddedAnalytics/SalesOverviewDashboard?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+```bash
+docker pull postgres
+```
 
-    INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES 
-    (4, 'crime', 'Crime Data', '2025-04-04', 'Crime Rate By Year', 'https://public.tableau.com/views/PublicSectorEmployeesCrimeData/CrimeRateByYear?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+Start a PostgreSQL container:
 
-    INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES 
-    (5, 'crime-1', 'Crime Data 1', '2025-04-05', 'Crime Rate By Year', 'https://public.tableau.com/views/DataAnalysis_17125825841580/CrimeRate?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
-9) Run the application using ```python manage.py runserver```
-   
-   The above command runs the application on port 8000. Make sure that you have installed required dependencies and started postgres sql in docker.
-  
-10) shut down the application manually using ```Ctrl-C```
+```bash
+docker run --name dappostgres -e POSTGRES_PASSWORD=Algoma@2024 -p 5434:5432 -d postgres
+```
 
+Create the application database:
+
+```bash
+docker exec -it dappostgres psql -U postgres -c "CREATE DATABASE dashboarddatabase"
+```
+
+### 4. Apply database migrations
+
+Generate migration files:
+
+```bash
+python manage.py makemigrations dashboard
+```
+
+Apply migrations to the database:
+
+```bash
+python manage.py migrate
+```
+
+### 5. Connect via pgAdmin 4
+
+Open pgAdmin 4 and create a new server connection using these credentials:
+
+| Field    | Value         |
+|----------|---------------|
+| Host     | `localhost`   |
+| Port     | `5434`        |
+| Database | `dashboarddatabase` |
+| Username | `postgres`    |
+| Password | `Algoma@2024` |
+
+### 6. Seed the database
+
+Run the following SQL in pgAdmin 4 (or via `psql`) to insert sample dashboard records:
+
+```sql
+INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES
+(1, 'us-senate-election', 'US Senate Election 1967-2022', '2025-04-04', 'Distribution by State and Year',
+ 'https://public.tableau.com/views/Book3_17425929926010/Sheet1?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+
+INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES
+(2, 'us-senate-election', 'US Senate Election 1967-2022', '2025-04-04', 'Total Votes by State',
+ 'https://public.tableau.com/shared/M5BF4XRNX?:display_count=n&:origin=viz_share_link');
+
+INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES
+(3, 'crime', 'Crime Data', '2025-04-04', 'Crime By Region',
+ 'https://public.tableau.com/views/LearnEmbeddedAnalytics/SalesOverviewDashboard?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+
+INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES
+(4, 'crime', 'Crime Data', '2025-04-04', 'Crime Rate By Year',
+ 'https://public.tableau.com/views/PublicSectorEmployeesCrimeData/CrimeRateByYear?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+
+INSERT INTO dashboards (id, type, title, created_time, name, link) VALUES
+(5, 'crime-1', 'Crime Data 1', '2025-04-05', 'Crime Rate By Year',
+ 'https://public.tableau.com/views/DataAnalysis_17125825841580/CrimeRate?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link');
+```
+
+You can add more rows following the same pattern.
+
+### 7. Run the development server
+
+```bash
+python manage.py runserver
+```
+
+The API will be available at `http://localhost:8000`.
+
+To stop the server, press `Ctrl+C`.
+
+---
+
+## Notes
+
+- Make sure Docker Desktop is running and the `dappostgres` container is active before starting the server.
+- The container maps PostgreSQL's default port `5432` to `5434` on your host machine to avoid conflicts with any locally installed PostgreSQL instance.
